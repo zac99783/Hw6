@@ -4,8 +4,11 @@ package com.example.user.hw6;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText editname ,edittel , editaddress;
     TextView texname,textel , texaddress , texno;
-    Button add,edit ,delete, query;
+    Button add,edit ,delete, query , detail;
     SQLiteDatabase dbrw;
 
     @Override
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         add =(Button) findViewById(R.id.add);
         edit = (Button)findViewById(R.id.edit);
         delete =(Button)findViewById(R.id.delete);
+        detail =(Button)findViewById(R.id.detail);
         query = (Button) findViewById(R.id.query);
 
         MyDBHelper dbhelper = new MyDBHelper(this);
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                newBook();
+                newStore();
             }
         });
 
@@ -52,26 +56,43 @@ public class MainActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                renewBook();
+                renewStore();
             }
         });
 
         delete.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                deleteBook();
+                deleteStore();
             }
         });
 
         query.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                querybook();
+                queryStore();
             }
         });
+
+
+        detail.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                detailStore();
+            }
+        });
+
+
+
+
+
     }
 
-    public void newBook(){
+
+
+
+
+    public void newStore(){
 
         if (editname.getText().toString().equals("")
                 || edittel.getText().toString().equals("")
@@ -96,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-   public  void renewBook(){
+   public  void renewStore(){
 
         if (editname.getText().toString().equals("")
                 || edittel.getText().toString().equals("")
@@ -120,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public  void deleteBook(){
+    public  void deleteStore(){
 
         if (editname.getText().toString().equals(""))
             Toast.makeText(this,"請輸入要刪除之值",Toast.LENGTH_SHORT).show();
@@ -136,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public  void querybook(){
+    public  void queryStore(){
 
         String index = "順序\n",title = "店名\n" , tel = "價格\n" , address = "店址\n";
         String[] colum ={"title" , "tel" ,"address"};
@@ -167,5 +188,50 @@ public class MainActivity extends AppCompatActivity {
             texaddress.setText(address);
             Toast.makeText(this , "共有" + c.getCount()+ "筆記錄" , Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    public  void detailStore() {
+
+        final CharSequence[] item1 = {"地圖位置","商品管理","下單管理","歷史銷售紀錄"};
+        AlertDialog.Builder br1 = new AlertDialog.Builder(this);
+        br1.setTitle("店家詳細")
+                .setSingleChoiceItems(item1, -1, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog1, int item) {
+                            }
+                }).setPositiveButton("確定", new DialogInterface.OnClickListener(){
+
+                public  void onClick(DialogInterface dialog1 , int id){
+
+                    switch (id){
+                        case 0: {
+                            Intent i1 = new Intent();
+                            i1.setClass(MainActivity.this, MapAddress.class);
+                            startActivityForResult(i1, 0);
+                            break;
+                        }
+                        case 1: {
+
+                            break;
+                        }
+                        case 2: {
+
+                            break;
+                        }
+                        case 3: {
+
+                            break;
+                        }
+                        default:
+                        {
+
+                        }
+                    }
+                }
+        }) ;
+        AlertDialog dialog1 = br1.create();
+        dialog1.show();
+
     }
 }
