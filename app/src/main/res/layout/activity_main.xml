@@ -61,7 +61,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="number"
             android:id="@+id/editaddress" />
     </LinearLayout>
 
@@ -77,14 +76,14 @@
             android:layout_weight="0.2"/>
 
         <Button
-            android:layout_width="62dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:text="修改"
             android:id="@+id/edit"
             android:layout_weight="0.2"/>
 
         <Button
-            android:layout_width="59dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:text="刪除"
             android:id="@+id/delete"
@@ -97,40 +96,41 @@
             android:id="@+id/query"
             android:layout_weight="0.2"/>
     </LinearLayout>
+
     <Button
+        android:id="@+id/detail"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:text="店家更多詳細"
-        android:id="@+id/detail" />
+        android:text="更多選項" />
     <LinearLayout
 
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
             android:text="順序"
             android:id="@+id/texno"
             android:layout_weight="0.2"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
             android:text="店名"
             android:id="@+id/textname"
             android:layout_weight="0.2"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
             android:text="電話"
             android:id="@+id/texttel"
             android:layout_weight="0.2"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
             android:text="店址"
             android:id="@+id/texaddress"
             android:layout_weight="0.2"/>

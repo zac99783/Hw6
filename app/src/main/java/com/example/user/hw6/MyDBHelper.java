@@ -25,7 +25,7 @@ public class MyDBHelper extends SQLiteOpenHelper{
 
         db.execSQL("CREATE TABLE myTable(_id integer primary key autoincrement," +
                 "title text no null ," +
-                "tel real no null "  +
+                "tel int no null, "  +
                 "address text no null)");
     }
 

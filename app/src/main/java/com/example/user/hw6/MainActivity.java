@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText editname ,edittel , editaddress;
@@ -96,10 +98,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (editname.getText().toString().equals("")
                 || edittel.getText().toString().equals("")
-                    || editaddress.getText().toString().equals(""))
-            Toast.makeText(this,"輸入資料不完全",Toast.LENGTH_SHORT).show();
-        else {
-            double tel = Double.parseDouble(edittel.getText().toString());
+                    || editaddress.getText().toString().equals("")) {
+            Toast.makeText( this, "輸入資料不完全", Toast.LENGTH_SHORT ).show();
+            editname.setText("");
+            edittel.setText("");
+            editaddress.setText("");
+        }
+
+      else{
+           int tel = Integer.parseInt(edittel.getText().toString());
             ContentValues cv = new ContentValues();
             cv.put("title" , editname.getText().toString());
             cv.put("tel",tel);
@@ -108,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
             dbrw.insert("myTable",null,cv);
 
             Toast.makeText(this ,"新增\n店名:" + editname.getText().toString()
-                            + "價格:" + tel  +
-                    "店址:" + editaddress.getText().toString(), Toast.LENGTH_SHORT).show();
+                            + "\n價格:" + tel  +
+                    "\n店址:" + editaddress.getText().toString(), Toast.LENGTH_SHORT).show();
 
             editname.setText("");
             edittel.setText("");
@@ -119,16 +126,27 @@ public class MainActivity extends AppCompatActivity {
 
    public  void renewStore(){
 
-        if (editname.getText().toString().equals("")
-                || edittel.getText().toString().equals("")
-                    || editaddress.getText().toString().equals(""))
+        if (editname.getText().toString().equals(""))
             Toast.makeText(this,"沒有輸入更新值",Toast.LENGTH_SHORT).show();
+        else if ( edittel.getText().toString().equals("")) {
 
-        else {
-            double newtel = Double.parseDouble(edittel.getText().toString());
+            ContentValues cv = new ContentValues();
+            cv.put("address", editaddress.getText().toString());
+
+            dbrw.update("myTable",cv, "title=" + "'" + editname.getText().toString() + "'", null);
+
+            Toast.makeText(this ,"成功", Toast.LENGTH_SHORT).show();
+
+            editname.setText("");
+            edittel.setText("");
+            editaddress.setText("");
+
+        }
+        else if(editaddress.getText().toString().equals("")){
+            int newtel = Integer.parseInt(edittel.getText().toString());
             ContentValues cv = new ContentValues();
             cv.put("tel",newtel);
-            cv.put("address", editaddress.getText().toString());
+
 
             dbrw.update("myTable",cv, "title=" + "'" + editname.getText().toString() + "'", null);
 
@@ -159,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
 
     public  void queryStore(){
 
-        String index = "順序\n",title = "店名\n" , tel = "價格\n" , address = "店址\n";
+        String index = "順序\n",title = "店名\n" , tel = "電話\n" , address = "店址\n";
+        String index1 = "順序\n",title1 = "店名\n" , tel1 = "電話\n" , address1 = "店址\n";
         String[] colum ={"title" , "tel" ,"address"};
 
         Cursor c;
@@ -179,13 +198,20 @@ public class MainActivity extends AppCompatActivity {
                 title += c.getString(0) + "\n";
                 tel += c.getString(1) + "\n";
                 address += c.getString(2) + "\n";
+                index1 += (i+1) + "\n";
+                title1 += c.getString(0) + "\n";
+                tel1 += c.getString(1) + "\n";
+                address1 += c.getString(2) + "\n";
                 c.moveToNext();
             }
 
-            texno.setText(index);
-            texname.setText(title);
-            textel.setText(tel);
-            texaddress.setText(address);
+
+
+                texno.setText(index);
+                texname.setText(title);
+                textel.setText(tel);
+                texaddress.setText(address);
+
             Toast.makeText(this , "共有" + c.getCount()+ "筆記錄" , Toast.LENGTH_SHORT).show();
         }
     }
@@ -193,45 +219,80 @@ public class MainActivity extends AppCompatActivity {
 
     public  void detailStore() {
 
-        final CharSequence[] item1 = {"地圖位置","商品管理","下單管理","歷史銷售紀錄"};
-        AlertDialog.Builder br1 = new AlertDialog.Builder(this);
-        br1.setTitle("店家詳細")
-                .setSingleChoiceItems(item1, -1, new DialogInterface.OnClickListener() {
+        final String[] item1 = {"地圖位置","商品管理","下單管理","歷史銷售紀錄","取消"};
+        AlertDialog.Builder dialog_list = new AlertDialog.Builder(MainActivity.this);
+        dialog_list.setTitle("請選擇:");
+        dialog_list.setItems(item1, new DialogInterface.OnClickListener(){
+            @Override
 
-                            public void onClick(DialogInterface dialog1, int item) {
-                            }
-                }).setPositiveButton("確定", new DialogInterface.OnClickListener(){
+            //只要你在onClick處理事件內，使用which參數，就可以知道按下陣列裡的哪一個了
+            public void onClick(DialogInterface dialog, int which) {
 
-                public  void onClick(DialogInterface dialog1 , int id){
 
-                    switch (id){
-                        case 0: {
-                            Intent i1 = new Intent();
-                            i1.setClass(MainActivity.this, MapAddress.class);
-                            startActivityForResult(i1, 0);
-                            break;
+
+
+
+                switch(item1[which]) {
+
+                    case "地圖位置":
+                        if(editname.getText().toString().equals("")) {
+                            Toast.makeText( MainActivity.this,"未輸入店名",Toast.LENGTH_SHORT).show();
                         }
-                        case 1: {
-
-                            break;
+                        else {
+                            Toast.makeText( MainActivity.this, "轉至" + item1[which], Toast.LENGTH_SHORT ).show();
+                            Intent intent1 = new Intent();
+                            intent1.setClass( MainActivity.this, MapAddress.class );
+                            startActivityForResult( intent1, 0 );
                         }
-                        case 2: {
+                        break;
 
-                            break;
+                    case "商品管理":
+                        if(editname.getText().toString().equals("")) {
+                            Toast.makeText( MainActivity.this,"未輸入店名",Toast.LENGTH_SHORT).show();
                         }
-                        case 3: {
+                        else {
+                            Toast.makeText( MainActivity.this, "轉至" + item1[which], Toast.LENGTH_SHORT ).show();
+                            Intent intent2 = new Intent();
+                            intent2.setClass( MainActivity.this, CommodityManagement.class );
+                            startActivityForResult( intent2, 0 );
+                        }
+                        break;
 
-                            break;
+                    case "下單管理":
+                        if(editname.getText().toString().equals("")) {
+                            Toast.makeText( MainActivity.this,"未輸入店名",Toast.LENGTH_SHORT).show();
                         }
-                        default:
-                        {
+                        else {
+                            Toast.makeText( MainActivity.this, "轉至" + item1[which], Toast.LENGTH_SHORT ).show();
+                            Intent intent3 = new Intent();
+                            intent3.setClass( MainActivity.this, OrderManagement.class );
+                            startActivityForResult( intent3, 0 );
+                        }
+                        break;
 
+                    case "歷史銷售紀錄":
+                        if(editname.getText().toString().equals("")) {
+                            Toast.makeText( MainActivity.this,"未輸入店名",Toast.LENGTH_SHORT).show();
                         }
-                    }
+                        else {
+                            Toast.makeText( MainActivity.this, "轉至" + item1[which], Toast.LENGTH_SHORT ).show();
+                            Intent intent4 = new Intent();
+                            intent4.setClass( MainActivity.this, SaleHistory.class );
+                            startActivityForResult( intent4, 0 );
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
-        }) ;
-        AlertDialog dialog1 = br1.create();
-        dialog1.show();
+
+
+
+            }
+        });
+        dialog_list.show();
 
     }
+
+
 }
