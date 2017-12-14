@@ -92,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
     public void newStore(){
 
         if (editname.getText().toString().equals("")
@@ -124,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-   public  void renewStore(){
+    public  void renewStore(){
 
         if (editname.getText().toString().equals(""))
             Toast.makeText(this,"沒有輸入更新值",Toast.LENGTH_SHORT).show();
@@ -178,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
     public  void queryStore(){
 
         String index = "順序\n",title = "店名\n" , tel = "電話\n" , address = "店址\n";
-        String index1 = "順序\n",title1 = "店名\n" , tel1 = "電話\n" , address1 = "店址\n";
         String[] colum ={"title" , "tel" ,"address"};
 
         Cursor c;
@@ -191,17 +188,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (c.getCount() >0){
-            c.moveToFirst();
 
+            c.moveToFirst();
             for (int i =0; i<c.getCount();i++){
                 index += (i+1) + "\n";
                 title += c.getString(0) + "\n";
                 tel += c.getString(1) + "\n";
                 address += c.getString(2) + "\n";
-                index1 += (i+1) + "\n";
-                title1 += c.getString(0) + "\n";
-                tel1 += c.getString(1) + "\n";
-                address1 += c.getString(2) + "\n";
                 c.moveToNext();
             }
 
@@ -227,24 +220,43 @@ public class MainActivity extends AppCompatActivity {
 
             //只要你在onClick處理事件內，使用which參數，就可以知道按下陣列裡的哪一個了
             public void onClick(DialogInterface dialog, int which) {
-
-
-
-
-
-                switch(item1[which]) {
+                switch (item1[which]) {
 
                     case "地圖位置":
-                        if(editname.getText().toString().equals("")) {
-                            Toast.makeText( MainActivity.this,"未輸入店名",Toast.LENGTH_SHORT).show();
+
+                        if (editname.getText().toString().equals( "" )) {
+                            Toast.makeText( MainActivity.this, "未輸入店名", Toast.LENGTH_SHORT ).show();
                         }
                         else {
-                            Toast.makeText( MainActivity.this, "轉至" + item1[which], Toast.LENGTH_SHORT ).show();
+                            Toast.makeText( MainActivity.this, "轉至" + editname.getText().toString() + "的" + item1[which], Toast.LENGTH_SHORT ).show();
+
+                            //查詢輸入之店家住址
+                            String index = "", title = "", tel = "", address = "";
+                            String[] colum = {"title", "tel", "address"};
+
+                            Cursor c;
+
+                            c = dbrw.query( "mytable", colum, "title=" + "'" +
+                                    editname.getText().toString() + "'", null, null, null, null );
+
+                            c.moveToFirst();
+                            for (int i = 0; i < c.getCount(); i++) {
+                                address += c.getString( 2 ) + "\n";
+                                c.moveToNext();
+                            }
+
+
+                            //建立Bundle傳送資料至Address頁面
+                            Bundle bundle = new Bundle();
+                            bundle.putString( "StoreName", editname.getText().toString() );
+                            bundle.putString( "StoreLocation", address );
+
                             Intent intent1 = new Intent();
+                            intent1.putExtra( "key1", bundle );
                             intent1.setClass( MainActivity.this, MapAddress.class );
                             startActivityForResult( intent1, 0 );
                         }
-                        break;
+                     break;
 
                     case "商品管理":
                         if(editname.getText().toString().equals("")) {
