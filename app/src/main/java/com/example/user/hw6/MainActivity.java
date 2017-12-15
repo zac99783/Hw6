@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //設定畫面元件連接
         editname = (EditText) findViewById(R.id.editname);
         edittel = (EditText) findViewById(R.id.edittel);
         editaddress = (EditText) findViewById(R.id.editaddress);
@@ -43,40 +44,39 @@ public class MainActivity extends AppCompatActivity {
         detail =(Button)findViewById(R.id.detail);
         query = (Button) findViewById(R.id.query);
 
+        //開啟資料庫
         MyDBHelper dbhelper = new MyDBHelper(this);
         dbrw = dbhelper.getWritableDatabase();
 
-
+        //新增商家資料功能
         add.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 newStore();
             }
         });
-
-
+        //編輯商家資料功能
         edit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 renewStore();
             }
         });
-
+        //刪除商家資料功能
         delete.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 deleteStore();
             }
         });
-
+        //尋找商家資料與顯示功能
         query.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 queryStore();
             }
         });
-
-
+        //跳至額外"abcd"之功能
         detail.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -91,18 +91,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    //新增商家資料功能
     public void newStore(){
 
+        //辨識輸入(皆未輸入、Toast顯示資料不正確)
         if (editname.getText().toString().equals("")
                 || edittel.getText().toString().equals("")
                     || editaddress.getText().toString().equals("")) {
             Toast.makeText( this, "輸入資料不完全", Toast.LENGTH_SHORT ).show();
+
+            //清空輸入之EditText
             editname.setText("");
             edittel.setText("");
             editaddress.setText("");
         }
 
+        //新增商家、電話、地址至資料庫(Toast顯示輸入值)
       else{
            int tel = Integer.parseInt(edittel.getText().toString());
             ContentValues cv = new ContentValues();
@@ -115,15 +119,15 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this ,"新增\n店名:" + editname.getText().toString()
                             + "\n價格:" + tel  +
                     "\n店址:" + editaddress.getText().toString(), Toast.LENGTH_SHORT).show();
-
+            //清空輸入之EditText
             editname.setText("");
             edittel.setText("");
             editaddress.setText("");
         }
     }
-
+    //編輯商家資料功能
     public  void renewStore(){
-
+        //辨識輸入(皆未輸入、Toast顯示資料不正確)
         if (editname.getText().toString().equals("") ||
                 (edittel.getText().toString().equals("") == true) &&
                         (editaddress.getText().toString().equals("")== true) ) {
@@ -131,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             editname.setText("");
             edittel.setText("");
             editaddress.setText("");
-        }
+        }//只有更新商家地址
         else if ((edittel.getText().toString().equals("") == true) &&
                 (editaddress.getText().toString().equals("")== false)) {
 
@@ -141,12 +145,12 @@ public class MainActivity extends AppCompatActivity {
             dbrw.update("myTable",cv, "title=" + "'" + editname.getText().toString() + "'", null);
 
             Toast.makeText(this ,"成功", Toast.LENGTH_SHORT).show();
-
+            //清空輸入之EditText
             editname.setText("");
             edittel.setText("");
             editaddress.setText("");
 
-        }
+        }//只有更新商家電話
         else if((edittel.getText().toString().equals("") == false) &&
                 (editaddress.getText().toString().equals("")== true)){
             int newtel = Integer.parseInt(edittel.getText().toString());
@@ -157,12 +161,12 @@ public class MainActivity extends AppCompatActivity {
             dbrw.update("myTable",cv, "title=" + "'" + editname.getText().toString() + "'", null);
 
             Toast.makeText(this ,"成功", Toast.LENGTH_SHORT).show();
-
+            //清空輸入之EditText
             editname.setText("");
             edittel.setText("");
             editaddress.setText("");
         }
-        else {
+        else {//資料皆更新
             int newtel = Integer.parseInt(edittel.getText().toString());
             ContentValues cv = new ContentValues();
             cv.put("tel",newtel);
@@ -179,9 +183,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    //刪除商家資料功能
     public  void deleteStore(){
 
+        //辨識輸入是否有值
         if (editname.getText().toString().equals("")) {
             Toast.makeText(this, "請輸入要刪除之值", Toast.LENGTH_SHORT).show();
             editname.setText("");
@@ -200,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //尋找商家資料與顯示功能
     public  void queryStore(){
 
         String index = "順序\n",title = "店名\n" , tel = "電話\n" , address = "店址\n";
@@ -208,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
         Cursor c;
 
+        //判斷是否尋找(店家名稱為空值，則顯示出所有商家
         if(editname.getText().toString().equals("")) {
             c = dbrw.query("myTable", colum, null, null, null, null, null);
         }
@@ -216,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                     editname.getText().toString() + "'", null, null, null, null);
         }
 
-
+        //判斷沒有找到該商家之輸出與提示
         if(c.getCount() == 0){
             Toast.makeText(this , "共有" + c.getCount()+ "筆記錄" , Toast.LENGTH_SHORT).show();
 
@@ -225,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
             textel.setText(tel);
             texaddress.setText(address);
         }
-
+        //判斷有值並將商家資料顯示與提示
         else if (c.getCount() >0){
 
             c.moveToFirst();
@@ -237,8 +243,6 @@ public class MainActivity extends AppCompatActivity {
                 c.moveToNext();
             }
 
-
-
                 texno.setText(index);
                 texname.setText(title);
                 textel.setText(tel);
@@ -248,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //轉跳至a,b,c,d功能
     public  void detailStore() {
 
         final String[] item1 = {"地圖位置","商品管理","下單管理","歷史銷售紀錄","取消"};
@@ -260,11 +264,15 @@ public class MainActivity extends AppCompatActivity {
             //只要你在onClick處理事件內，使用which參數，就可以知道按下陣列裡的哪一個了
             public void onClick(DialogInterface dialog, int which) {
                 switch (item1[which]) {
-
+                    //功能a
                     case "地圖位置":
 
+                        //判斷使用者有無填寫商家欄位並提示
                         if (editname.getText().toString().equals( "" )) {
                             Toast.makeText( MainActivity.this, "未輸入店名", Toast.LENGTH_SHORT ).show();
+                            editname.setText("");
+                            edittel.setText("");
+                            editaddress.setText("");
                         }
                         else {
 
@@ -283,12 +291,12 @@ public class MainActivity extends AppCompatActivity {
                                 address += c.getString( 2 ) + "\n";
                                 c.moveToNext();
                             }
-
+                            //如果輸入之商家在資料庫有值，執行數值傳遞至地圖位置頁面
                             if((address == "") == false ) {
 
                                 Toast.makeText( MainActivity.this, "轉至" + editname.getText().toString() + "的" + item1[which], Toast.LENGTH_SHORT ).show();
 
-                                //建立Bundle傳送資料至Address頁面
+                                //建立Bundle傳送資料至頁面
                                 Bundle bundle = new Bundle();
                                 bundle.putString("StoreName", editname.getText().toString());
                                 bundle.putString("StoreLocation", address);
@@ -302,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                                 edittel.setText("");
                                 editaddress.setText("");
                             }
-                            else {
+                            else {//如果輸入之商家沒有在資料庫中，提示並清空填寫欄位
                                 Toast.makeText( MainActivity.this, "未找到店名", Toast.LENGTH_SHORT ).show();
                                 editname.setText("");
                                 edittel.setText("");
@@ -310,10 +318,10 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                      break;
-
+                    //功能b
                     case "商品管理":
 
-
+                        //判斷使用者有無填寫商家欄位並提示
                         if (editname.getText().toString().equals( "" )) {
                             Toast.makeText( MainActivity.this, "未輸入店名", Toast.LENGTH_SHORT ).show();
                         }
@@ -334,12 +342,12 @@ public class MainActivity extends AppCompatActivity {
                                 address += c.getString( 2 ) + "\n";
                                 c.moveToNext();
                             }
-
+                            //如果輸入之商家在資料庫有值，執行數值傳遞至商品管理頁面
                             if((address == "") == false ) {
 
                                 Toast.makeText( MainActivity.this, "轉至" + editname.getText().toString() + "的" + item1[which], Toast.LENGTH_SHORT ).show();
 
-                                //建立Bundle傳送資料至Address頁面
+                                //建立Bundle傳送資料至頁面
                                 Bundle bundle = new Bundle();
                                 bundle.putString("StoreName", editname.getText().toString());
 
@@ -352,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
                                 edittel.setText("");
                                 editaddress.setText("");
                             }
-                            else {
+                            else {//如果輸入之商家沒有在資料庫中，提示並清空填寫欄位
                                 Toast.makeText( MainActivity.this, "未找到店名", Toast.LENGTH_SHORT ).show();
                                 editname.setText("");
                                 edittel.setText("");
