@@ -124,9 +124,16 @@ public class MainActivity extends AppCompatActivity {
 
     public  void renewStore(){
 
-        if (editname.getText().toString().equals(""))
-            Toast.makeText(this,"沒有輸入更新值",Toast.LENGTH_SHORT).show();
-        else if ( edittel.getText().toString().equals("")) {
+        if (editname.getText().toString().equals("") ||
+                (edittel.getText().toString().equals("") == true) &&
+                        (editaddress.getText().toString().equals("")== true) ) {
+            Toast.makeText(this, "沒有輸入更新值", Toast.LENGTH_SHORT).show();
+            editname.setText("");
+            edittel.setText("");
+            editaddress.setText("");
+        }
+        else if ((edittel.getText().toString().equals("") == true) &&
+                (editaddress.getText().toString().equals("")== false)) {
 
             ContentValues cv = new ContentValues();
             cv.put("address", editaddress.getText().toString());
@@ -140,10 +147,26 @@ public class MainActivity extends AppCompatActivity {
             editaddress.setText("");
 
         }
-        else if(editaddress.getText().toString().equals("")){
+        else if((edittel.getText().toString().equals("") == false) &&
+                (editaddress.getText().toString().equals("")== true)){
             int newtel = Integer.parseInt(edittel.getText().toString());
             ContentValues cv = new ContentValues();
             cv.put("tel",newtel);
+
+
+            dbrw.update("myTable",cv, "title=" + "'" + editname.getText().toString() + "'", null);
+
+            Toast.makeText(this ,"成功", Toast.LENGTH_SHORT).show();
+
+            editname.setText("");
+            edittel.setText("");
+            editaddress.setText("");
+        }
+        else {
+            int newtel = Integer.parseInt(edittel.getText().toString());
+            ContentValues cv = new ContentValues();
+            cv.put("tel",newtel);
+            cv.put("address", editaddress.getText().toString());
 
 
             dbrw.update("myTable",cv, "title=" + "'" + editname.getText().toString() + "'", null);
@@ -159,9 +182,12 @@ public class MainActivity extends AppCompatActivity {
 
     public  void deleteStore(){
 
-        if (editname.getText().toString().equals(""))
-            Toast.makeText(this,"請輸入要刪除之值",Toast.LENGTH_SHORT).show();
-
+        if (editname.getText().toString().equals("")) {
+            Toast.makeText(this, "請輸入要刪除之值", Toast.LENGTH_SHORT).show();
+            editname.setText("");
+            edittel.setText("");
+            editaddress.setText("");
+        }
         else {
 
             dbrw.delete("myTable","title=" + "'" + editname.getText().toString() + "'", null);
@@ -169,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this ,"刪除成功", Toast.LENGTH_SHORT).show();
 
             editname.setText("");
+            edittel.setText("");
+            editaddress.setText("");
         }
     }
 
@@ -179,15 +207,26 @@ public class MainActivity extends AppCompatActivity {
         String[] colum ={"title" , "tel" ,"address"};
 
         Cursor c;
-        if(editname.getText().toString().equals(""))
-            c = dbrw.query("myTable",colum,null,null,null,null,null);
+
+        if(editname.getText().toString().equals("")) {
+            c = dbrw.query("myTable", colum, null, null, null, null, null);
+        }
         else {
             c = dbrw.query("mytable", colum, "title=" + "'" +
                     editname.getText().toString() + "'", null, null, null, null);
         }
 
 
-        if (c.getCount() >0){
+        if(c.getCount() == 0){
+            Toast.makeText(this , "共有" + c.getCount()+ "筆記錄" , Toast.LENGTH_SHORT).show();
+
+            texno.setText(index);
+            texname.setText(title);
+            textel.setText(tel);
+            texaddress.setText(address);
+        }
+
+        else if (c.getCount() >0){
 
             c.moveToFirst();
             for (int i =0; i<c.getCount();i++){
@@ -228,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText( MainActivity.this, "未輸入店名", Toast.LENGTH_SHORT ).show();
                         }
                         else {
-                            Toast.makeText( MainActivity.this, "轉至" + editname.getText().toString() + "的" + item1[which], Toast.LENGTH_SHORT ).show();
+
 
                             //查詢輸入之店家住址
                             String index = "", title = "", tel = "", address = "";
@@ -245,28 +284,80 @@ public class MainActivity extends AppCompatActivity {
                                 c.moveToNext();
                             }
 
+                            if((address == "") == false ) {
 
-                            //建立Bundle傳送資料至Address頁面
-                            Bundle bundle = new Bundle();
-                            bundle.putString( "StoreName", editname.getText().toString() );
-                            bundle.putString( "StoreLocation", address );
+                                Toast.makeText( MainActivity.this, "轉至" + editname.getText().toString() + "的" + item1[which], Toast.LENGTH_SHORT ).show();
 
-                            Intent intent1 = new Intent();
-                            intent1.putExtra( "key1", bundle );
-                            intent1.setClass( MainActivity.this, MapAddress.class );
-                            startActivityForResult( intent1, 0 );
+                                //建立Bundle傳送資料至Address頁面
+                                Bundle bundle = new Bundle();
+                                bundle.putString("StoreName", editname.getText().toString());
+                                bundle.putString("StoreLocation", address);
+
+                                Intent intent1 = new Intent();
+                                intent1.putExtra("key1", bundle);
+                                intent1.setClass(MainActivity.this, MapAddress.class);
+                                startActivityForResult(intent1, 0);
+
+                                editname.setText("");
+                                edittel.setText("");
+                                editaddress.setText("");
+                            }
+                            else {
+                                Toast.makeText( MainActivity.this, "未找到店名", Toast.LENGTH_SHORT ).show();
+                                editname.setText("");
+                                edittel.setText("");
+                                editaddress.setText("");
+                            }
                         }
                      break;
 
                     case "商品管理":
-                        if(editname.getText().toString().equals("")) {
-                            Toast.makeText( MainActivity.this,"未輸入店名",Toast.LENGTH_SHORT).show();
+
+
+                        if (editname.getText().toString().equals( "" )) {
+                            Toast.makeText( MainActivity.this, "未輸入店名", Toast.LENGTH_SHORT ).show();
                         }
                         else {
-                            Toast.makeText( MainActivity.this, "轉至" + item1[which], Toast.LENGTH_SHORT ).show();
-                            Intent intent2 = new Intent();
-                            intent2.setClass( MainActivity.this, CommodityManagement.class );
-                            startActivityForResult( intent2, 0 );
+
+
+                            //查詢輸入之店家住址
+                            String index = "", title = "", tel = "", address = "";
+                            String[] colum = {"title", "tel", "address"};
+
+                            Cursor c;
+
+                            c = dbrw.query( "mytable", colum, "title=" + "'" +
+                                    editname.getText().toString() + "'", null, null, null, null );
+
+                            c.moveToFirst();
+                            for (int i = 0; i < c.getCount(); i++) {
+                                address += c.getString( 2 ) + "\n";
+                                c.moveToNext();
+                            }
+
+                            if((address == "") == false ) {
+
+                                Toast.makeText( MainActivity.this, "轉至" + editname.getText().toString() + "的" + item1[which], Toast.LENGTH_SHORT ).show();
+
+                                //建立Bundle傳送資料至Address頁面
+                                Bundle bundle = new Bundle();
+                                bundle.putString("StoreName", editname.getText().toString());
+
+                                Intent intent2 = new Intent();
+                                intent2.putExtra("key2", bundle);
+                                intent2.setClass(MainActivity.this, CommodityManagement.class);
+                                startActivityForResult(intent2, 0);
+
+                                editname.setText("");
+                                edittel.setText("");
+                                editaddress.setText("");
+                            }
+                            else {
+                                Toast.makeText( MainActivity.this, "未找到店名", Toast.LENGTH_SHORT ).show();
+                                editname.setText("");
+                                edittel.setText("");
+                                editaddress.setText("");
+                            }
                         }
                         break;
 
