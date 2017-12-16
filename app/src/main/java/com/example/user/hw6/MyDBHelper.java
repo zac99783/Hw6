@@ -31,8 +31,8 @@ public class MyDBHelper extends SQLiteOpenHelper{
         db.execSQL("CREATE TABLE  myGoods(_id integer primary key autoincrement," +
                 "goods text no null," +
                 "price int no null," +
-                "goods_amount int no null" +
-                ")");
+                "goods_amount int no null," +
+                "title  text no null)");
     }
 
     @Override

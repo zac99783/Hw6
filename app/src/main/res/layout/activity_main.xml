@@ -69,30 +69,34 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:layout_width="60dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="新增"
+            android:text="新增店名"
+            android:textSize="12sp"
             android:id="@+id/add"
             android:layout_weight="0.2"/>
 
         <Button
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="修改"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="修改\n電話店址"
+            android:textSize="12sp"
             android:id="@+id/edit"
             android:layout_weight="0.2"/>
 
         <Button
-            android:layout_width="60dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="刪除"
+            android:textSize="12sp"
             android:id="@+id/delete"
             android:layout_weight="0.2"/>
 
         <Button
-            android:layout_width="60dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="查詢"
+            android:text="查詢店名"
+            android:textSize="12sp"
             android:id="@+id/query"
             android:layout_weight="0.2"/>
     </LinearLayout>
@@ -111,7 +115,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="  "></TextView>
+            android:text="                               "></TextView>
 
         <TextView
             android:layout_width="wrap_content"

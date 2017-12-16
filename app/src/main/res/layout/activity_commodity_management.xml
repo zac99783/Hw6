@@ -71,30 +71,34 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:layout_width="60dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="新增"
+            android:text="新增商品"
+            android:textSize="12sp"
             android:id="@+id/add"
             android:layout_weight="0.2"/>
 
         <Button
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="修改"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="修改\n價格數量"
+            android:textSize="12sp"
             android:id="@+id/edit"
             android:layout_weight="0.2"/>
 
         <Button
-            android:layout_width="60dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="刪除"
+            android:text="刪除商品"
+            android:textSize="12sp"
             android:id="@+id/delete"
             android:layout_weight="0.2"/>
 
         <Button
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="查詢"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="查詢\n商品名稱"
+            android:textSize="12sp"
             android:id="@+id/query"
             android:layout_weight="0.2"/>
     </LinearLayout>
@@ -114,8 +118,8 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="店名" />
-
+            android:gravity="center_horizontal"
+            android:text="您的店名是 : " />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -133,12 +137,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+
         <TextView
+            android:id="@+id/texno"
             android:layout_width="70dp"
             android:layout_height="match_parent"
-            android:text="順序"
-            android:id="@+id/texno"
-            android:layout_weight="0.2"/>
+            android:layout_weight="0.2"
+            android:text="順序" />
 
         <TextView
             android:layout_width="110dp"
@@ -160,5 +165,16 @@
             android:text="數量"
             android:id="@+id/texgoods_amount"
             android:layout_weight="0.2"/>
+
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:text="店名"
+            android:id="@+id/textitle"
+            android:layout_weight="0.2"/>
+
+
+
     </LinearLayout>
 </LinearLayout>

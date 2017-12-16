@@ -1,6 +1,7 @@
 package com.example.user.hw6;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +16,10 @@ public class CommodityManagement extends AppCompatActivity {
 
 
     EditText editgoods , editprice , editgoods_amount;
-    TextView texname,texgoods_amount,texgoods , texprice , texno;
+    TextView texname,texgoods_amount,texgoods , texprice , texno,textitle ;
     Button add,edit ,delete, query , return_main;
     SQLiteDatabase dbrw2;
+
 
 
 
@@ -40,6 +42,7 @@ public class CommodityManagement extends AppCompatActivity {
         texgoods = (TextView) findViewById(R.id.textgoods);
         texprice = (TextView) findViewById(R.id.textprice);
         texgoods_amount = (TextView) findViewById(R.id.texgoods_amount);
+        textitle = (TextView) findViewById(R.id.textitle);
 
         MyDBHelper CommodityDB = new MyDBHelper(this);
         dbrw2 = CommodityDB.getWritableDatabase();
@@ -83,17 +86,23 @@ public class CommodityManagement extends AppCompatActivity {
         });
 
 
-        /*detail.setOnClickListener(new View.OnClickListener(){
+        return_main.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                detailStore();
+
+                Intent intent1 = new Intent();
+                intent1.setClass(CommodityManagement.this, MainActivity.class);
+                startActivityForResult(intent1, 0);
+                Toast.makeText(CommodityManagement.this, "返回主畫面", Toast.LENGTH_SHORT ).show();
             }
-        });*/
+        });
     }
 
 
     public void newGoods() {
 
+        Bundle bundle = getIntent().getExtras().getBundle("key2");
+        String getStoreData = bundle.getString("StoreName");
 
 
         if (editgoods.getText().toString().equals("")
@@ -110,11 +119,13 @@ public class CommodityManagement extends AppCompatActivity {
             cv.put("goods", editgoods.getText().toString());
             cv.put("price", price);
             cv.put("goods_amount", goods_amount);
+            cv.put("title", getStoreData);
 
             dbrw2.insert("myGoods", null, cv);
 
-            Toast.makeText(this, "新增\n商品:" + editgoods.getText().toString()
-                    + "\n價格:" + price +
+            Toast.makeText(this, "在店名:"+ getStoreData +"  新增" +
+                    "\n商品:" + editgoods.getText().toString()
+                    +"\n價格:" + price +
                     "\n數量:" + goods_amount, Toast.LENGTH_SHORT).show();
 
             editgoods.setText("");
@@ -207,45 +218,60 @@ public class CommodityManagement extends AppCompatActivity {
 
     public  void  queryGoods() {
 
-                String index2 = "順序\n", goods = "商品\n", price = "價格\n", goods_amount = "數量\n";
-                String[] colum2 = {"goods", "price", "goods_amount"};
+        Bundle bundle = getIntent().getExtras().getBundle("key2");
+        String getStoreData = bundle.getString("StoreName");
 
-                Cursor c2;
-                if (editgoods.getText().toString().equals("")) {
-                    c2 = dbrw2.query("myGoods", colum2, null, null, null, null, null);
-                } else {
-                    c2 = dbrw2.query("myGoods", colum2, "goods=" + "'" +
-                            editgoods.getText().toString() + "'", null, null, null, null);
+
+
+
+        String index2 = "順序\n", goods = "商品\n", price = "價格\n", goods_amount = "數量\n", name = "店名\n";
+        String[] colum2 = {"goods", "price", "goods_amount", "title"};
+
+        Cursor c2;
+        if (editgoods.getText().toString().equals("")) {
+            c2 = dbrw2.query("myGoods", colum2, "title=" + "'" + getStoreData + "'", null, null, null, null);
+        }
+        else{
+
+            c2 = dbrw2.query("myGoods", colum2,
+                             "goods=" + "'" + editgoods.getText().toString() + "'"+ " and " + "title=" + "'" + getStoreData + "'", null, null, null, null);
+        }
+
+
+        if (c2.getCount() >0) {
+            c2.moveToFirst();
+
+                for (int a = 0; a < c2.getCount(); a++) {
+                    index2 += (a + 1) + "\n";
+                    goods += c2.getString(0) + "\n";
+                    price += c2.getString(1) + "\n";
+                    goods_amount += c2.getString(2) + "\n";
+                    name += c2.getString(3) + "\n";
+                    c2.moveToNext();
+
                 }
 
+                texno.setText(index2);
+                texgoods.setText(goods);
+                texprice.setText(price);
+                texgoods_amount.setText(goods_amount);
+                textitle.setText(name);
+                Toast.makeText(this, "共有" + c2.getCount() + "筆記錄", Toast.LENGTH_SHORT).show();
 
-                if (c2.getCount() == 0) {
-                    Toast.makeText(this, "共有" + c2.getCount() + "筆記錄", Toast.LENGTH_SHORT).show();
-
-                    texno.setText(index2);
-                    texgoods.setText(goods);
-                    texprice.setText(price);
-                    texgoods_amount.setText(goods_amount);
-                }
-                else if (c2.getCount() > 0) {
-
-                    c2.moveToFirst();
-                    for (int i = 0; i < c2.getCount(); i++) {
-                        index2 += (i + 1) + "\n";
-                        goods += c2.getString(0) + "\n";
-                        price += c2.getString(1) + "\n";
-                        goods_amount += c2.getString(2) + "\n";
-                        c2.moveToNext();
-                    }
+        }
 
 
-                    texno.setText(index2);
-                    texgoods.setText(goods);
-                    texprice.setText(price);
-                    texgoods_amount.setText(goods_amount);
+        else{
 
-                    Toast.makeText(this, "共有" + c2.getCount() + "筆記錄", Toast.LENGTH_SHORT).show();
-                }
+            texno.setText(index2);
+            texgoods.setText(goods);
+            texprice.setText(price);
+            texgoods_amount.setText(goods_amount);
+            textitle.setText(name);
+            Toast.makeText(this, "共有0筆記錄", Toast.LENGTH_SHORT).show();
+
+        }
+
 
     }
 }
