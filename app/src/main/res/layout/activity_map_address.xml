@@ -45,6 +45,22 @@
         android:inputType="number"
         android:id="@+id/textStoreLocation" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/return_main"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:text="返回主畫面" />
+
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mapppp"
+        class ="com.google.android.gms.maps.SupportMapFragment" />
+
+
+
 </LinearLayout>
 
 
