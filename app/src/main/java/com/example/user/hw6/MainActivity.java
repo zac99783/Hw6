@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
     //轉跳至a,b,c,d功能
     public  void detailStore() {
 
-        final String[] item1 = {"地圖位置","商品管理","下單管理","歷史銷售紀錄","取消"};
+        final String[] item1 = {"地圖位置(功能 2-a)","商品管理(功能 2-b)","下單管理(功能 2-c&d)","取消"};
         AlertDialog.Builder dialog_list = new AlertDialog.Builder(MainActivity.this);
         dialog_list.setTitle("請選擇:");
         dialog_list.setItems(item1, new DialogInterface.OnClickListener(){
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 switch (item1[which]) {
                     //功能a
-                    case "地圖位置":
+                    case "地圖位置(功能 2-a)":
 
                         //判斷使用者有無填寫商家欄位並提示
                         if (editname.getText().toString().equals( "" )) {
@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
                             c.moveToFirst();
                             for (int i = 0; i < c.getCount(); i++) {
-                                address += c.getString( 2 ) + "\n";
+                                address = c.getString( 2 );
                                 c.moveToNext();
                             }
                             //如果輸入之商家在資料庫有值，執行數值傳遞至地圖位置頁面
@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                      break;
                     //功能b
-                    case "商品管理":
+                    case "商品管理(功能 2-b)":
 
                         //判斷使用者有無填寫商家欄位並提示
                         if (editname.getText().toString().equals( "" )) {
@@ -369,29 +369,19 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
 
-                    case "下單管理":
-                        if(editname.getText().toString().equals("")) {
-                            Toast.makeText( MainActivity.this,"未輸入店名",Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                    case "下單管理(功能 2-c&d)":
+
                             Toast.makeText( MainActivity.this, "轉至" + item1[which], Toast.LENGTH_SHORT ).show();
                             Intent intent3 = new Intent();
                             intent3.setClass( MainActivity.this, OrderManagement.class );
-                            startActivityForResult( intent3, 0 );
-                        }
+                            startActivityForResult( intent3, 0);
+
+                             break;
+
+                    case "取消":
+
                         break;
 
-                    case "歷史銷售紀錄":
-                        if(editname.getText().toString().equals("")) {
-                            Toast.makeText( MainActivity.this,"未輸入店名",Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText( MainActivity.this, "轉至" + item1[which], Toast.LENGTH_SHORT ).show();
-                            Intent intent4 = new Intent();
-                            intent4.setClass( MainActivity.this, SaleHistory.class );
-                            startActivityForResult( intent4, 0 );
-                        }
-                        break;
 
                     default:
                         break;

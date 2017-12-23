@@ -32,7 +32,9 @@ public class MyDBHelper extends SQLiteOpenHelper{
                 "goods text no null," +
                 "price int no null," +
                 "goods_amount int no null," +
-                "title  text no null)");
+                "title  text no null," +
+                "order_amount int no null)");
+
     }
 
     @Override

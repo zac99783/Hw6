@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.user.hw6">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,16 +15,17 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBMfTkAPz2uG6rNbbjWbsvDrxXQGjHpsr4" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MapAddress" />
         <activity android:name=".CommodityManagement" />
-        <activity android:name=".SaleHistory" />
-        <activity android:name=".OrderManagement"></activity>
+        <activity android:name=".OrderManagement" />
     </application>
 
 </manifest>

@@ -16,7 +16,7 @@ public class CommodityManagement extends AppCompatActivity {
 
 
     EditText editgoods , editprice , editgoods_amount;
-    TextView texname,texgoods_amount,texgoods , texprice , texno,textitle ;
+    TextView texname,texgoods_amount,texgoods , texprice , texno,textitle ,texorder_amount ;
     Button add,edit ,delete, query , return_main;
     SQLiteDatabase dbrw2;
 
@@ -43,6 +43,7 @@ public class CommodityManagement extends AppCompatActivity {
         texprice = (TextView) findViewById(R.id.textprice);
         texgoods_amount = (TextView) findViewById(R.id.texgoods_amount);
         textitle = (TextView) findViewById(R.id.textitle);
+        texorder_amount = (TextView) findViewById(R.id.texorder_amount);
 
         MyDBHelper CommodityDB = new MyDBHelper(this);
         dbrw2 = CommodityDB.getWritableDatabase();
@@ -115,11 +116,13 @@ public class CommodityManagement extends AppCompatActivity {
         } else {
             int price = Integer.parseInt(editprice.getText().toString());
             int goods_amount = Integer.parseInt(editgoods_amount.getText().toString());
+            int a = 0;
             ContentValues cv = new ContentValues();
             cv.put("goods", editgoods.getText().toString());
             cv.put("price", price);
             cv.put("goods_amount", goods_amount);
             cv.put("title", getStoreData);
+            cv.put("order_amount", a);
 
             dbrw2.insert("myGoods", null, cv);
 
@@ -224,8 +227,8 @@ public class CommodityManagement extends AppCompatActivity {
 
 
 
-        String index2 = "順序\n", goods = "商品\n", price = "價格\n", goods_amount = "數量\n", name = "店名\n";
-        String[] colum2 = {"goods", "price", "goods_amount", "title"};
+        String index2 = "順序\n", goods = "商品\n", price = "價格\n", goods_amount = "庫存數量\n", name = "店名\n", order_amount = "購買數量\n";
+        String[] colum2 = {"goods", "price", "goods_amount", "title", "order_amount"};
 
         Cursor c2;
         if (editgoods.getText().toString().equals("")) {
@@ -241,12 +244,14 @@ public class CommodityManagement extends AppCompatActivity {
         if (c2.getCount() >0) {
             c2.moveToFirst();
 
+
                 for (int a = 0; a < c2.getCount(); a++) {
                     index2 += (a + 1) + "\n";
                     goods += c2.getString(0) + "\n";
                     price += c2.getString(1) + "\n";
                     goods_amount += c2.getString(2) + "\n";
                     name += c2.getString(3) + "\n";
+                    order_amount += c2.getString(4) + "\n";
                     c2.moveToNext();
 
                 }
@@ -256,6 +261,7 @@ public class CommodityManagement extends AppCompatActivity {
                 texprice.setText(price);
                 texgoods_amount.setText(goods_amount);
                 textitle.setText(name);
+                texorder_amount.setText(order_amount);
                 Toast.makeText(this, "共有" + c2.getCount() + "筆記錄", Toast.LENGTH_SHORT).show();
 
         }
